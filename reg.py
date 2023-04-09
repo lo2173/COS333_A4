@@ -9,37 +9,33 @@ import classsearch as cs
 import lineparser as lp
 
 #-----------------------------------------------------------------------
-app = flask.Flask(__name__)
+app = flask.Flask(__name__, template_folder='.')
 #-----------------------------------------------------------------------
-def cookiehandle():
-    prev_dept = flask.request.cookies.get('deptcookie')
-    if prev_dept.find('None')>=0:
-        prev_dept = ''
-    prev_num = flask.request.cookies.get('numcookie')
-    if prev_num.find('None')>=0:
-        prev_num = ''
-    prev_area = flask.request.cookies.get('areacookie')
-    if prev_area.find('None')>=0:
-        prev_area = ''
-    prev_title = flask.request.cookies.get('titlecookie')
-    if prev_title.find('None')>=0:
-        prev_title = ''
-    return [prev_dept, prev_num,prev_area,prev_title]
 
 @app.route('/', methods =['GET'])
+def init():
+    html_code = flask.render_template('regresults.html')
+    response = flask.make_response(html_code)
+    return response
+
+@app.route('/searchresults',methods = ['GET'])
 def search_results():
-    source = flask.request.url
-    if source.find('?')<0:
-        dept = flask.request.args.get('dept')
-        num = flask.request.args.get('number')
-        area = flask.request.args.get('area')
-        title = flask.request.args.get('title')
-    else:
-        request = source.split('?')[1].split('&')
-        dept = str(request[0].split('=')[1])
-        num = str(request[1].split('=')[1])
-        area = str(request[2].split('=')[1])
-        title=str(request[3].split('=')[1])
+    dept = flask.request.args.get('dept')
+    if dept is None:
+        dept = ''
+    dept = dept.strip()
+    num = flask.request.args.get('number')
+    if num is None:
+        num = ''
+    num = num.strip()
+    area = flask.request.args.get('area')
+    if area is None:
+        area = ''
+    area = area.strip()
+    title = flask.request.args.get('title')
+    if title is None:
+        title = ''
+    title = title.strip()
     try:
         search = ds.DatabaseSearch()
         rawsearch = search.fullsearch(idept=dept,icoursenum=num,
@@ -53,33 +49,16 @@ def search_results():
     course_results_ = []
     for row in rawsearch:
         course_results_.append(lp.LineParser(row))
-    if dept is None:
-        dept = ''
-    if num is None:
-        num = ''
-    if area is None:
-        area = ''
-    if title is None:
-        title = ''
-    html_code = flask.render_template('regresults.html',
-        course_results = course_results_,
-        dept = dept,
-        num = num,
-        area = area,
-        title = title)
+    html_code = flask.render_template('resultstable.html',
+        course_results = course_results_)
     response = flask.make_response(html_code)
-    response.set_cookie('deptcookie',dept)
-    response.set_cookie('numcookie',num)
-    response.set_cookie('areacookie',area)
-    response.set_cookie('titlecookie',title)
     return response
+
 
 @app.route('/regdetails',methods=['GET'])
 def regdetails():
-    previous = cookiehandle()
-    try:
-        classid = flask.request.url.split('=')[1]
-    except IndexError:
+    classid = flask.request.args.get('results')
+    if classid == '':
         html_code = flask.render_template('errorpage.html',
             type_error = 'Missing Classid')
         return flask.make_response(html_code)
@@ -94,7 +73,7 @@ def regdetails():
         general= search.get_general()
         if bool(general) is False:
             html_code = flask.render_template('errorpage.html',
-                type_error = 'Non-Exisiting Classid')
+                type_error = 'Non-Exisiting Classid: '+classid)
             return flask.make_response(html_code)
         general = general[0]
         deptandnum =[]
