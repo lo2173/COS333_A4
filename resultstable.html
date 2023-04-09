@@ -1,0 +1,20 @@
+<table>
+    <tr>
+        <td><strong>ClassId</strong></td>
+        <td><strong>Dept</strong></td>
+        <td><strong>Num</strong></td>
+        <td><strong>Area</strong></td>
+        <td><strong>Title</strong></td>
+    </tr>
+    {% if course_results|length != 0%}
+        {%for line in course_results%}
+            <tr>
+                <td><a href="/regdetails?results={{line.getclassid()}}" name = "class_id">{{line.getclassid()}}</a></td>
+                <td>{{line.getdept()}}</td>
+                <td>{{line.getnum()}}</td>
+                <td>{{line.getarea()}}</td>
+                <td>{{line.gettitle()}}</td>
+            </tr>
+        {%endfor%}
+    {%endif%}
+</table>
