@@ -1,23 +1,25 @@
-<h2>Course Details (course id {{course_id}})</h2>
-{%for line in dept_and_nums: %}
-    <strong>Dept and Number: </strong>{{line}}<br>
-{%endfor%}
-<strong>Area: </strong>{{area}}<br>
-<strong>Title: </strong>
-{{title}} <br>
-<!--{%for line in title: %}
-    {{line}} <br>
-{%endfor%}-->
-<strong>Description: </strong>
-{{description}} <br>
-<!--{%for line in description: %}
-    {{line}} <br>
-{%endfor%}-->
-<strong>Prerequisites: </strong>
-{{prereqs}} <br>
-<!--{%for line in prereqs: %}
-    {line} <br>
-{%endfor%}-->
-{%for line in professors: %}
-    <strong>Professor: </strong>{{line}}<br>
-{%endfor%}
+<div class = "container-fluid">
+    <h2>Course Details (course id {{course_id}})</h2>
+    {%for line in dept_and_nums: %}
+        <strong>Dept and Number: </strong>{{line}}<br>
+    {%endfor%}
+    <strong>Area: </strong>{{area}}<br>
+    <strong>Title: </strong>
+    {{title}} <br>
+    <!--{%for line in title: %}
+        {{line}} <br>
+    {%endfor%}-->
+    <strong>Description: </strong>
+    {{description}} <br>
+    <!--{%for line in description: %}
+        {{line}} <br>
+    {%endfor%}-->
+    <strong>Prerequisites: </strong>
+    {{prereqs}} <br>
+    <!--{%for line in prereqs: %}
+        {line} <br>
+    {%endfor%}-->
+    {%for line in professors: %}
+        <strong>Professor: </strong>{{line}}<br>
+    {%endfor%}
+</div>

@@ -24,7 +24,7 @@ def search_results():
     if dept is None:
         dept = ''
     dept = dept.strip()
-    num = flask.request.args.get('number')
+    num = flask.request.args.get('num')
     if num is None:
         num = ''
     num = num.strip()
@@ -42,7 +42,7 @@ def search_results():
         iarea=area, ititle=title)
     except Exception as ex:
         print(ex,file=sys.stderr)
-        html_code=flask.render_template('errorpage.html',
+        html_code=flask.render_template('errorpage_portion.html',
             type_error = '''A server error occured.
             Please contact the system adminstrator''')
         return flask.make_response(html_code)
@@ -63,6 +63,7 @@ def regdetails():
             type_error = 'Missing Classid')
         return flask.make_response(html_code)
     try:
+        strclassid = classid
         classid = int(classid)
     except ValueError:
         html_code = flask.render_template('errorpage.html',
@@ -73,7 +74,7 @@ def regdetails():
         general= search.get_general()
         if bool(general) is False:
             html_code = flask.render_template('errorpage.html',
-                type_error = 'Non-Exisiting Classid: '+classid)
+                type_error = 'No Class with Classid '+strclassid+' Exists')
             return flask.make_response(html_code)
         general = general[0]
         deptandnum =[]
@@ -93,8 +94,6 @@ def regdetails():
         end_time=general[3],building=general[4],room=general[5],
         course_id=general[0],dept_and_nums=deptandnum,
         area=general[6],title=general[7],description=general[8],
-        professors=profs,prereqs=general[9],prev_dept=previous[0],
-        prev_num=previous[1],prev_area=previous[2],
-        prev_title=previous[3])
+        professors=profs,prereqs=general[9])
     response = flask.make_response(html_code)
     return response
