@@ -74,7 +74,7 @@ def regdetails():
         general= search.get_general()
         if bool(general) is False:
             html_code = flask.render_template('errorpage.html',
-                type_error = 'No Class with Classid '+strclassid+' Exists')
+            type_error = 'No Class with Classid '+strclassid+' Exists')
             return flask.make_response(html_code)
         general = general[0]
         deptandnum =[]
